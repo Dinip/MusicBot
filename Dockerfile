@@ -1,4 +1,8 @@
-FROM alpine:3.11
+FROM alpine:3.10
+
+# Add project source
+WORKDIR /opt/musicbot
+COPY . ./
 
 # Install dependencies
 RUN apk update \
@@ -8,35 +12,32 @@ RUN apk update \
   opus \
   python3 \
   libsodium-dev \
-\
+  git
+
 # Install build dependencies
-&& apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache --virtual .build-deps \
   gcc \
   git \
   libffi-dev \
   make \
   musl-dev \
-  python3-dev 
+  python3-dev
 
-# Set working directory
-WORKDIR /usr/src/musicbot
-
-# Add project requirements
-COPY ./requirements.txt ./requirements.txt
 
 # Install pip dependencies
-RUN pip3 install --upgrade pip \
- && pip3 install --no-cache-dir -r requirements.txt \
-\
-# Clean up build dependencies
- && apk del .build-deps
+RUN cd /opt/musicbot && \
+    pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements.txt
 
-# Add project sources
-COPY . ./
+# Clean up build dependencies
+RUN apk del .build-deps
+
+WORKDIR /opt/musicbot
 
 # Create volume for mapping the config
-VOLUME /usr/src/musicbot/config
+VOLUME /opt/musicbot/config
+VOLUME /opt/musicbot/audio_cache
 
 ENV APP_ENV=docker
 
-CMD ["python3", "dockerentry.py"]
+ENTRYPOINT ["python3", "dockerentry.py"]

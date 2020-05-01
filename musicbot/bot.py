@@ -2250,7 +2250,7 @@ class MusicBot(discord.Client):
 
         if player.is_playing:
             # TODO: Fix timedelta garbage with util function
-            song_progress = ftimedelta(timedelta(seconds=player.progress))
+            song_progress = ftimedelta(timedelta(seconds=player.progress)) if player.progress != None else '(no progress data)'
             song_total = ftimedelta(timedelta(seconds=player.current_entry.duration)) if player.current_entry.duration != None else '(no duration data)'
             prog_str = '`[%s/%s]`' % (song_progress, song_total)
 
