@@ -27,7 +27,8 @@ RUN apk add --no-cache --virtual .build-deps \
 # Install pip dependencies
 RUN cd /opt/musicbot && \
     pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements.txt
+    pip3 install --no-cache-dir -r requirements.txt && \
+    pip3 install discord.py[voice]
 
 # Clean up build dependencies
 RUN apk del .build-deps
