@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM python:3.7-alpine
 
 # Add project source
 WORKDIR /opt/musicbot
@@ -23,12 +23,10 @@ RUN apk add --no-cache --virtual .build-deps \
   musl-dev \
   python3-dev
 
-
 # Install pip dependencies
 RUN cd /opt/musicbot && \
     pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements.txt && \
-    pip3 install discord.py[voice]
+    pip3 install --no-cache-dir -r requirements.txt
 
 # Clean up build dependencies
 RUN apk del .build-deps
